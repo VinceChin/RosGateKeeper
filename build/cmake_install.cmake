@@ -131,8 +131,7 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/vince/catkin_ws/build/gtest/cmake_install.cmake")
-  include("/home/vince/catkin_ws/build/custom_cam_pkg/cmake_install.cmake")
-  include("/home/vince/catkin_ws/build/speech_recognition/cmake_install.cmake")
+  include("/home/vince/catkin_ws/build/my_ros_gatekeeper/cmake_install.cmake")
 
 endif()
 

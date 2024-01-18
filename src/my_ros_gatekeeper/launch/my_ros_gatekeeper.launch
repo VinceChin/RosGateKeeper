@@ -1,0 +1,14 @@
+<launch>
+    <arg name="voiceprint_recognition_enabled" default="false"/>
+    <arg name="voiceprint_service_url" default="http://your_voiceprint_recognition_service/api/recognize"/>
+    <arg name="facial_recognition_url" default="http://baidu.com"/>
+
+    <node name="custom_cam_node" pkg="my_ros_gatekeeper" type="custom_cam_node.py" output="screen" >
+        <param name="facial_recognition_url" value="$(arg facial_recognition_url)" />
+    </node>
+    <node name="speech_recognition_node" pkg="my_ros_gatekeeper" type="speech_recognition_node.py" output="screen" >
+        <param name="voiceprint_recognition_enabled" value="$(arg voiceprint_recognition_enabled)"/>
+        <param name="voiceprint_service_url" value="$(arg voiceprint_service_url)"/>
+    </node>
+    <node name="text_to_speech_node" pkg="my_ros_gatekeeper" type="text_to_speech_node.py" output="screen" />
+</launch>

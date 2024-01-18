@@ -1,2 +1,2 @@
-custom_cam_pkg:speech_recognition
+my_ros_gatekeeper
 -DCATKIN_DEVEL_PREFIX=/home/vince/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/vince/catkin_ws/install -G Unix Makefiles
