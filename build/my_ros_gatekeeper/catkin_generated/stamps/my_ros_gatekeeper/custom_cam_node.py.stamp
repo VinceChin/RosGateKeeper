@@ -12,7 +12,7 @@ import json
 import requests
 import base64
 
-DEFAULT_FACE_SERVICE_URL = "https://google.com"
+DEFAULT_FACE_SERVICE_URL = "https://01bc-103-18-0-18.ngrok-free.app/face_detect"
 
 class VideoRecorder:
     def __init__(self):
@@ -39,23 +39,26 @@ class VideoRecorder:
             self.delete_recording()
 
             data = {
-                'state' : 1,
-                'name' : name
+                'state': 1,
+                'name': name,
             }
+
+            # 将数据转换为 JSON 字符串
+            json_data = json.dumps(data)
             response = requests.post(self.facerecognition_service_url, files=files, data=data)
             # check status code
             if response.status_code == 200:
                 # retrieve data
                 data = response.json() 
+                rospy.loginfo(data)
                 result_code = data.get('result') 
 
-                if result_code == 1:
-                    rospy.loginfo("Failed to record face")
-                    self.pub.publish("record failure")
-                else:
-                    name = data.get('name')
+                if result_code == 0:
                     rospy.loginfo("Successfully recorded the face.")
                     self.pub.publish("record success")
+                else:
+                    rospy.loginfo("Failed to record face")
+                    self.pub.publish("record failure")
                 return
             else:
                 rospy.logerr("HTTP error " + str(response.status_code) + " : " + response.text.encode('utf-8'))
@@ -76,14 +79,15 @@ class VideoRecorder:
                 # retrieve data
                 data = response.json() 
                 result_code = data.get('result') 
+                rospy.loginfo(data)
 
-                if result_code == 1:
+                if result_code == 0:
+                    name = data.get('name')
+                    rospy.loginfo("Successfully unlock people is %s." %name)
+                    self.pub.publish(name)
+                else:
                     rospy.loginfo("Failed to recognize face")
                     self.pub.publish("unlock failure")
-                else:
-                    name = data.get('name')
-                    rospy.loginfo("Successfully recorded the face.")
-                    self.pub.publish(name)
                 return
             else:
                 rospy.logerr("HTTP error " + str(response.status_code) + " : " + response.text.encode('utf-8'))

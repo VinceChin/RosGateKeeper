@@ -1,5 +1,4 @@
-
-#!/usr/bin/env python
+#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 import rospy
@@ -56,6 +55,8 @@ def speech_recognition_node():
                 rospy.logwarn("Could not understand audio")
             except sr.RequestError as e:
                 rospy.logerr("Could not request results; %s " %e )
+        rospy.logerr('rospy is shutdown')
+    rospy.logerror('mic is released')
 
 if __name__ == '__main__':
     try:

@@ -1,7 +1,7 @@
 <launch>
     <arg name="voiceprint_recognition_enabled" default="false"/>
     <arg name="voiceprint_service_url" default="http://your_voiceprint_recognition_service/api/recognize"/>
-    <arg name="facial_recognition_url" default="http://baidu.com"/>
+    <arg name="facial_recognition_url" default="https://01bc-103-18-0-18.ngrok-free.app/face_detect"/>
 
     <node name="custom_cam_node" pkg="my_ros_gatekeeper" type="custom_cam_node.py" output="screen" >
         <param name="facial_recognition_url" value="$(arg facial_recognition_url)" />
