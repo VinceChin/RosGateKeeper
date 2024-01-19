@@ -23,7 +23,6 @@ Just say unlock to the robot
 # System Sequence Diagram Description
 ```mermaid
 sequenceDiagram
-    style defaultParticipant font-size:20px
 
     participant User
     participant Speech_Recognition_Node as Speech Recognition Node
