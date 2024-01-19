@@ -20,28 +20,28 @@ Just say unlock to the robot
 
 
 
-## System Sequence Diagram Description
+# System Sequence Diagram Description
+sequenceDiagram
+    participant User
+    participant Speech_Recognition_Node as Speech Recognition Node
+    participant Camera
+    participant Face_Recognition_Service as Face Recognition Service
+    participant TTS_Service as TTS Service
 
-This sequence outlines the interactions within the My_Ros_Gatekeeper system, including speech recognition, video recording, face recognition, and text-to-speech responses.
-
-1. **User Interaction with Speech Recognition Node**:
-   - The user provides a voice input.
-   - The speech recognition node determines if the keyword is "unlock" or "start recording".
-
-2. **Process for 'Unlock' Command**:
-   - If the keyword is "unlock":
-     - The camera records a 2-second video and selects 5 random frames.
-     - These frames are sent to the face recognition service.
-     - The face recognition service processes the images and determines the outcome.
-       - If recognition fails, the TTS service announces a failure to unlock.
-       - If recognition succeeds, the server returns the user's name, and the TTS service welcomes the user home.
-
-3. **Process for 'Start Recording' Command**:
-   - If the keyword is "start recording":
-     - The TTS service asks the user for their name.
-     - The user responds with their name.
-     - The camera then records another 2-second video, selecting 5 frames to send to the face recognition service for enrollment.
-     - The TTS service announces the outcome of the face recording process.
-
-This sequence diagram provides a clear overview of how the My_Ros_Gatekeeper system processes voice commands and interacts with the user for face recognition and feedback.
+    User->>Speech_Recognition_Node: Voice input
+    alt command is "unlock"
+        Speech_Recognition_Node->>Camera: Record 2s video
+        Camera->>Face_Recognition_Service: Send 5 frames
+        alt recognition fails
+            Face_Recognition_Service->>TTS_Service: Announce failure
+        else recognition succeeds
+            Face_Recognition_Service->>TTS_Service: Welcome user
+        end
+    else command is "start recording"
+        Speech_Recognition_Node->>TTS_Service: Ask for user's name
+        User->>Speech_Recognition_Node: Respond with name
+        Speech_Recognition_Node->>Camera: Record 2s video
+        Camera->>Face_Recognition_Service: Send 5 frames for enrollment
+        Face_Recognition_Service->>TTS_Service: Announce outcome
+    end
 
