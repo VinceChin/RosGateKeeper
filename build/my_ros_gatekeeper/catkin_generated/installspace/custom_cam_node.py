@@ -13,12 +13,14 @@ import requests
 import base64
 
 DEFAULT_FACE_SERVICE_URL = "https://01bc-103-18-0-18.ngrok-free.app/face_detect"
+DEFAULT_VIDEO_DEVICE = "/dev/video0"
 
 class VideoRecorder:
     def __init__(self):
         self.video_file = 'output.mp4'
         self.frame_numbers = []
         self.facerecognition_service_url = rospy.get_param('~facial_recognition_url', DEFAULT_FACE_SERVICE_URL)
+        self.video_device = rospy.get_param('~video_device', DEFAULT_VIDEO_DEVICE)
 
         self.keyword_sub = rospy.Subscriber("recognition_result", String, self.keyword_callback)
         self.pub = rospy.Publisher('/speech_topic', String, queue_size=10)
@@ -64,7 +66,7 @@ class VideoRecorder:
                 rospy.logerr("HTTP error " + str(response.status_code) + " : " + response.text.encode('utf-8'))
                 self.pub.publish("record failure")
                 return 
-        elif msg.data.lower() == "unlock":
+        elif "unlock" in msg.data.lower() :
             rospy.loginfo('Start Facial Recognition.')
             self.start_recording()
             files = self.images_to_files()
@@ -134,7 +136,7 @@ class VideoRecorder:
     def record_video(self):
         # use ffmpeg to reocord this video
         try:
-            record_command = "ffmpeg -f v4l2 -i /dev/video0 -t 1 " + self.video_file
+            record_command = 'ffmpeg -f v4l2 -i' +self.video_device '-t 2 '+ self.video_file
             subprocess.call(record_command, shell=True)
             rospy.loginfo("Video recording stopped.")
             # select 5 random frames
@@ -142,7 +144,7 @@ class VideoRecorder:
             fps = video.get(cv2.CAP_PROP_FPS)
             video.release()
             rospy.loginfo("Video fps is %s", str(fps))
-            total_frames = fps 
+            total_frames = 2 * fps
         
             self.frame_numbers = random.sample(range(int(total_frames)), 5)
             for frame_number in self.frame_numbers:
